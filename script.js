@@ -25,26 +25,28 @@ window.addEventListener("load", function() {
       let isBlank = false;
       let div = document.getElementById("faultyItems"); //.style.visibility = "visible";
       let heading2 = document.getElementById("launchStatus");
+
+
       if (pilotName.value === "" || copilotName.value === "" || fuelLevel.value === "" || cargoMass.value === "") {
          isBlank = true;
          alert("All fields are required!");
          event.preventDefault();
-      } else {
-         isBlank = false;
-      }
-      if (!isBlank){
-         if (isNaN(Number(fuelLevel.value)) || isNaN(Number(cargoMass.value)) || isBadName(pilotNameArray) || isBadName(copilotNameArray)) {
-            alert("Make sure to enter valid information for each field!");
-            event.preventDefault();
-         } 
-      }
+      } else if (!isBlank){
+            if (isNaN(Number(fuelLevel.value)) || isNaN(Number(cargoMass.value)) || isBadName(pilotNameArray) || isBadName(copilotNameArray)) {
+               alert("Make sure to enter valid information for each field!");
+               event.preventDefault();
+            } 
+         }
+      
       console.log("fuelLevel.value is type and value " , typeof fuelLevel.value, fuelLevel.value);
       console.log("Number(fuelLevel.value) is type and value ", typeof Number(fuelLevel.value), Number(fuelLevel.value));
       if (Number(fuelLevel.value) < 10000) {
          console.log("hit low fuel level function");
-         document.getElementById("faultyItems").style.visibility = "visible";
+         heading2.textContent = "Shuttle Not Ready For Launch!";
+         heading2.style.color  = "red";
+         //document.getElementById("faultyItems").style.visibility = "visible";
          div.innerHTML = `
-            <ol>
+            <ol style="visibility:visible">
                <li id="pilotStatus">Pilot ${pilotName.value} is Ready</li>
                <li id="copilotStatus">Co-pilot ${copilotName.value} is Ready</li>
                <li id="fuelStatus">Fuel level is too low for launch</li>
@@ -59,6 +61,12 @@ window.addEventListener("load", function() {
 // if (form.username.value == "") {
 //    document.getElementById("surnameMissing").style.visibility = "visible";        
 //  }
+
+
+      // else {
+      //    isBlank = false;
+      // }
+
 
 /* This block of code shows how to format the HTML once you fetch some planetary JSON!
 <h2>Mission Destination</h2>
