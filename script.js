@@ -1,4 +1,3 @@
-//Write your JavaScript code here!
 function isBadName(array) {
    let badName = false;
    for (let i = 0; i < array.length; i++){
@@ -15,6 +14,24 @@ function isBadName(array) {
 
 window.addEventListener("load", function() {
    let form = document.querySelector("form");
+   let index = Math.floor(Math.random()* 6);
+   fetch("https://handlers.education.launchcode.org/static/planets.json").then(function(response) {
+      response.json().then(function(json) {  
+         let destination = this.document.getElementById("missionTarget");
+         destination.innerHTML = `
+         <h2>Mission Destination</h2>
+            <ol>
+               <li>Name: ${json[index].name}</li>
+               <li>Diameter: ${json[index].diameter}</li>
+               <li>Star: ${json[index].star}</li>
+               <li>Distance from Earth: ${json[index].distance}</li>
+               <li>Number of Moons: ${json[index].moons}</li>
+            </ol>
+         <img src="${json[index].image}">
+         `;
+      });
+   });
+
    form.addEventListener('submit',function() {
       let pilotName = document.querySelector("input[name=pilotName]");
       let copilotName = document.querySelector("input[name=copilotName");
@@ -22,67 +39,54 @@ window.addEventListener("load", function() {
       let cargoMass = document.querySelector("input[name=cargoMass");
       let pilotNameArray = pilotName.value.split('');
       let copilotNameArray = copilotName.value.split('');
-      let isBlank = false;
-      let div = document.getElementById("faultyItems"); //.style.visibility = "visible";
+      let allGood = false
+      let div = document.getElementById("faultyItems");
       let heading2 = document.getElementById("launchStatus");
-
-
-      if (pilotName.value === "" || copilotName.value === "" || fuelLevel.value === "" || cargoMass.value === "") {
-         isBlank = true;
+      if (pilotName.value !== "" && copilotName.value !== "" && fuelLevel.value !== "" && cargoMass.value !== "") { 
+         if (isNaN(Number(fuelLevel.value)) || isNaN(Number(cargoMass.value)) || isBadName(pilotNameArray) || isBadName(copilotNameArray)) { 
+            alert("Make sure to enter valid information for each field!");
+            event.preventDefault();
+            console.log("fuelLevel.value is type and value " , typeof fuelLevel.value, fuelLevel.value);
+            console.log("Number(fuelLevel.value) is type and value ", typeof Number(fuelLevel.value), Number(fuelLevel.value));
+         } else {
+            allGood = true;
+         }
+      }  else {
          alert("All fields are required!");
          event.preventDefault();
-      } else if (!isBlank){
-            if (isNaN(Number(fuelLevel.value)) || isNaN(Number(cargoMass.value)) || isBadName(pilotNameArray) || isBadName(copilotNameArray)) {
-               alert("Make sure to enter valid information for each field!");
-               event.preventDefault();
-            } 
-         }
-      
-      console.log("fuelLevel.value is type and value " , typeof fuelLevel.value, fuelLevel.value);
-      console.log("Number(fuelLevel.value) is type and value ", typeof Number(fuelLevel.value), Number(fuelLevel.value));
-      if (Number(fuelLevel.value) < 10000) {
-         console.log("hit low fuel level function");
+      } 
+      if (allGood && Number(fuelLevel.value) < 10000) {
          heading2.textContent = "Shuttle Not Ready For Launch!";
          heading2.style.color  = "red";
-         //document.getElementById("faultyItems").style.visibility = "visible";
          div.innerHTML = `
             <ol style="visibility:visible">
                <li id="pilotStatus">Pilot ${pilotName.value} is Ready</li>
                <li id="copilotStatus">Co-pilot ${copilotName.value} is Ready</li>
-               <li id="fuelStatus">Fuel level is too low for launch</li>
+               <li id="fuelStatus" style="color:red">Fuel level is too low for launch</li>
                <li id="cargoStatus">Cargo mass low enough for launch</li>
             </ol>
          `; 
          event.preventDefault();
+      } 
+      if (allGood && Number(cargoMass.value) > 10000) {
+         heading2.textContent = "Shuttle Not Ready For Launch!";
+         heading2.style.color  = "red";
+         div.innerHTML = `
+            <ol style="visibility:visible">
+               <li id="pilotStatus">Pilot ${pilotName.value} is Ready</li>
+               <li id="copilotStatus">Co-pilot ${copilotName.value} is Ready</li>
+               <li id="fuelStatus">Fuel level is high enough for launch</li>
+               <li id="cargoStatus" style="color:red">Cargo mass is too great for launch</li>
+            </ol>
+         `; 
+         event.preventDefault();
+      } else if (allGood && Number(fuelLevel.value > 10000)) {
+      heading2.textContent = "Shuttle Is Ready For Launch";
+      heading2.style.color = "green";
+      div.innerHTML = `
+            <ol style="visibility:hidden">
+         `; 
+      event.preventDefault();
       }
    }); 
 });
-//style="visibility:visible"
-// if (form.username.value == "") {
-//    document.getElementById("surnameMissing").style.visibility = "visible";        
-//  }
-
-
-      // else {
-      //    isBlank = false;
-      // }
-
-
-/* This block of code shows how to format the HTML once you fetch some planetary JSON!
-<h2>Mission Destination</h2>
-<ol>
-   <li>Name: ${}</li>
-   <li>Diameter: ${}</li>
-   <li>Star: ${}</li>
-   <li>Distance from Earth: ${}</li>
-   <li>Number of Moons: ${}</li>
-</ol>
-<img src="${}">
-*/
-   // console.log(pilotNameArray);
-   // console.log(copilotNameArray);
-   // console.log("type of pilotName.value is ", typeof pilotName.value, "pilotName.Value is ",pilotName.value);
-   // console.log("type of copilotName.value is ", typeof copilotName.value, "pilotName.Value is ",copilotName.value);
-   // console.log("type of fuelLevel.value is ", typeof fuelLevel.value, typeof Number(fuelLevel), "fuelLevel.Value is ",fuelLevel.value);
-   // console.log("type of cargoMass.value is ", typeof cargoMass.value, typeof Number(cargoMass), "cargoMass.Value is ",cargoMass.value);
-      

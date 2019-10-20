@@ -4,10 +4,10 @@ h1 {
 
 div {
     text-align: left;
+
 }
 
 #faultyItems {
-    /*visibility: visible;  */
     visibility: hidden;   
 }
 
